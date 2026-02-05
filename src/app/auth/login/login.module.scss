@@ -1,0 +1,202 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.login_container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $bg-body; // Light gray bg from design
+  
+  // Optional: Add a subtle background pattern or gradient if needed
+  background-image: 
+    linear-gradient(to bottom right, $bg-body, $bg-hover);
+}
+
+.login_card {
+  width: 100%;
+  max-width: 450px;
+  background-color: $bg-sidebar;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @include mobile {
+    padding: 24px;
+    margin: 20px;
+    max-width: 100%;
+  }
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $text-dark;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: $text-gray;
+  font-size: 0.95rem;
+  margin-bottom: 30px;
+
+  a {
+    color: $primary;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 4px;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.social_buttons {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 24px;
+
+  button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    background-color: $bg-sidebar;
+    color: $text-dark;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: $bg-hover;
+      border-color: #D8D8E5; // Manually darkened version of border-color
+    }
+
+    img {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.divider {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  color: $text-light;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 600;
+
+  &::before, &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: $border-color;
+  }
+
+  span {
+    padding: 0 12px;
+  }
+}
+
+.form {
+  width: 100%;
+  
+  .form_group {
+    margin-bottom: 16px;
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: $text-dark;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid $border-color;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: $text-dark;
+      outline: none;
+      transition: border-color 0.2s;
+
+      &:focus {
+        border-color: $primary;
+        box-shadow: 0 0 0 3px rgba($primary, 0.1);
+      }
+
+      &::placeholder {
+        color: $text-light;
+      }
+    }
+  }
+
+  .form_options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    font-size: 0.9rem;
+
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: $text-gray;
+      cursor: pointer;
+
+      input {
+        width: 16px;
+        height: 16px;
+        accent-color: $primary;
+        cursor: pointer;
+      }
+    }
+
+    .forgot {
+      color: $primary;
+      text-decoration: none;
+      font-weight: 600;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .submit_btn {
+    width: 100%;
+    padding: 12px;
+    background-color: $primary;
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+}

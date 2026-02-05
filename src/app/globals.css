@@ -1,8 +1,41 @@
 @import "tailwindcss";
 
 :root {
+  /* Default Next.js Variables */
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Metronic Light Mode Defaults */
+  --primary: #3E97FF;
+  --primary-light: #EBF5FF;
+  
+  --text-dark: #252F4A;
+  --text-gray: #78829D;
+  --text-light: #99A1B7;
+
+  --bg-body: #F9F9F9;
+  --bg-sidebar: #FFFFFF;
+  --bg-hover: #F1F1F4;
+
+  --border-color: #F1F1F2;
+}
+
+/* 
+   Dark Mode Overrides - Matched to Metronic 8 Reference Image
+*/
+:root.dark {
+  --primary: #3E97FF;
+  --primary-light: #2B3345; 
+
+  --text-dark: #FFFFFF;      
+  --text-gray: #5e6278; /* Muted text */
+  --text-light: #474761;
+
+  --bg-body: #151521;        /* Deep Metronic Background */
+  --bg-sidebar: #1e1e2d;     /* Card/Sidebar Surface */
+  --bg-hover: #2b2b40;       /* Hover state */
+
+  --border-color: #2b2b40;
 }
 
 @theme inline {
@@ -13,6 +46,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
+  /* System Preference Fallback */
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
@@ -20,7 +54,10 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg-body);
+  color: var(--text-dark);
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }

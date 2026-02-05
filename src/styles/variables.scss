@@ -1,0 +1,23 @@
+// Theme Colors (Metronic Inspired)
+// Mapped to CSS Variables defined in globals.css
+
+$primary: var(--primary);
+$primary-light: var(--primary-light);
+
+$text-dark: var(--text-dark);
+$text-gray: var(--text-gray);
+$text-light: var(--text-light);
+
+$bg-body: var(--bg-body);
+$bg-sidebar: var(--bg-sidebar);
+$bg-hover: var(--bg-hover);
+
+$border-color: var(--border-color);
+
+// Spacing (Static)
+$sidebar-width: 280px;
+$sidebar-width-collapsed: 80px;
+$header-height: 60px;
+
+// Typography
+$font-family: 'Inter', sans-serif;
