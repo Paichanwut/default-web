@@ -1,0 +1,95 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background-color: currentColor;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+
+/* Size variations */
+.sm .dot {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+.md .dot {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.lg .dot {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Overlay for full screen loading */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(30, 30, 45, 0.9); /* #1e1e2d with 90% opacity */
+  backdrop-filter: blur(4px);
+  color: white;
+}
+
+/* Overlay for contained loading (inside a specific container) */
+.contained {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50; /* Lower than global but high enough to cover content */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.7); /* Lighter background for content area? Or stick to dark? */
+  /* Let's keep it consistent with theme or just semi-transparent */
+  background-color: rgba(30, 30, 45, 0.5); 
+  backdrop-filter: blur(2px);
+  color: white;
+  border-radius: inherit; /* Inherit border radius from container if any */
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.inlineWrapper {
+  color: #6b7280; /* text-gray-500 */
+}

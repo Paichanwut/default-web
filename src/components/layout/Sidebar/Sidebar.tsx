@@ -130,58 +130,74 @@ const MENU_DATA: MenuItem[] = [
   },
 ];
 
-// --- Recursive Component ---
-const SidebarItem = React.memo(
-  ({ item, depth = 0 }: { item: MenuItem; depth?: number }) => {
+type SidebarItemType = MenuItem;
+
+interface SidebarItemProps {
+  item: SidebarItemType;
+  depth?: number;
+  isOpen?: boolean; // Controlled state
+  onToggle?: () => void; // Controlled toggle handler
+}
+
+const SidebarItem: React.FC<SidebarItemProps> = React.memo(
+  ({ item, depth = 0, isOpen: controlledIsOpen, onToggle }) => {
     const pathname = usePathname();
 
-    const [isOpen, setIsOpen] = useState(() => {
+    // Internal state for uncontrolled usage (e.g. nested items if not controlled)
+    const [internalIsOpen, setInternalIsOpen] = useState(() => {
       if (item.children) {
         return hasActiveChild(item.children, pathname);
       }
       return false;
     });
 
-    useEffect(() => {
-      if (item.children && hasActiveChild(item.children, pathname)) {
-        setIsOpen(true);
-      }
-    }, [pathname, item.children]);
+    // Determine effective state: controlled takes precedence if provided (not undefined)
+    const isExpanded =
+      controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
 
-    const isActive = item.path === pathname;
+    const isActive = item.path
+      ? pathname === item.path
+      : item.children
+        ? hasActiveChild(item.children, pathname)
+        : false;
+
     const hasChildren = item.children && item.children.length > 0;
+    const isSection = item.type === "section";
+
+    // Handle toggle
+    const handleToggle = (e: React.MouseEvent) => {
+      e.preventDefault();
+      if (onToggle) {
+        onToggle();
+      } else {
+        setInternalIsOpen(!internalIsOpen);
+      }
+    };
 
     // --- Render Section Header ---
-    if (item.type === "section") {
+    if (isSection) {
       return (
-        <>
-          <div className={styles.section_separator} />
-
-          <div className={styles.menu_group}>
-            <div
-              className={styles.menu_section_title}
-              onClick={() => setIsOpen(!isOpen)}
+        <div className={styles.menu_group}>
+          <div className={styles.menu_section_title} onClick={handleToggle}>
+            <span>{item.title}</span>
+            <span className={styles.section_letter}>
+              {item.title.charAt(0)}
+            </span>
+            <span
+              className={`${styles.chevron} ${isExpanded ? styles.rotate : ""}`}
             >
-              <span>{item.title}</span>
-              <span
-                className={`${styles.chevron} ${isOpen ? styles.rotate : ""}`}
-              >
-                <ChevronDown size={14} />
-              </span>
-            </div>
-            <div
-              className={`${styles.sub_menu_container} ${isOpen ? styles.expanded : ""}`}
-            >
-              {item.children?.map((child, index) => (
-                <SidebarItem
-                  key={index}
-                  item={{ ...child, type: "link" }}
-                  depth={0}
-                />
-              ))}
-            </div>
+              <ChevronDown size={14} />
+            </span>
           </div>
-        </>
+          <div
+            className={`${styles.sub_menu_container} ${isExpanded ? styles.expanded : ""}`}
+          >
+            {item.children!.map((child, index) => (
+              <SidebarItem key={index} item={child} depth={depth} />
+            ))}
+          </div>
+          <div className={styles.section_separator} />
+        </div>
       );
     }
 
@@ -195,7 +211,13 @@ const SidebarItem = React.memo(
           title={item.title}
         >
           <div className={styles.link_wrapper}>
-            {item.icon && <item.icon className={styles.icon} />}
+            {item.icon ? (
+              <item.icon className={styles.icon} />
+            ) : (
+              <span className={styles.fallback_icon}>
+                {item.title.charAt(0)}
+              </span>
+            )}
             <span className={styles.label}>{item.title}</span>
           </div>
         </Link>
@@ -208,25 +230,28 @@ const SidebarItem = React.memo(
         <div
           className={`${styles.menu_item} ${isActive ? styles.active_item : ""}`}
           style={{ paddingLeft: `${12 + depth * 12}px` }}
-          onClick={(e) => {
-            e.preventDefault();
-            setIsOpen(!isOpen);
-          }}
+          onClick={handleToggle}
           title={item.title}
         >
           <div className={styles.link_wrapper}>
-            {item.icon && <item.icon className={styles.icon} />}
+            {item.icon ? (
+              <item.icon className={styles.icon} />
+            ) : (
+              <span className={styles.fallback_icon}>
+                {item.title.charAt(0)}
+              </span>
+            )}
             <span className={styles.label}>{item.title}</span>
           </div>
 
           <ChevronRight
-            className={`${styles.arrow} ${isOpen ? styles.rotate_down : ""}`}
+            className={`${styles.arrow} ${isExpanded ? styles.rotate_down : ""}`}
             size={16}
           />
         </div>
 
         <div
-          className={`${styles.sub_menu_container} ${isOpen ? styles.expanded : ""}`}
+          className={`${styles.sub_menu_container} ${isExpanded ? styles.expanded : ""}`}
         >
           {item.children!.map((child, index) => (
             <SidebarItem key={index} item={child} depth={depth + 1} />
@@ -242,11 +267,47 @@ SidebarItem.displayName = "SidebarItem";
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  isCollapsed?: boolean;
+  toggleCollapse?: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  isOpen,
+  onClose,
+  isCollapsed = false,
+  toggleCollapse,
+}) => {
   const { user, logout, isLoading } = useAuth();
   const { theme, toggleTheme } = useTheme();
+
+  // Accordion State: Track the ID/Title of the currently open top-level menu
+  const pathname = usePathname();
+  // Initialize state based on current path to avoid "closed then open" flash on load
+  const [openMenuKey, setOpenMenuKey] = useState<string | null>(() => {
+    // Find the item that contains the active path
+    const activeItem = MENU_DATA.find(
+      (item) => item.children && hasActiveChild(item.children, pathname),
+    );
+    return activeItem ? activeItem.title : null;
+  });
+
+  // Sync with path changes (navigation)
+  useEffect(() => {
+    // Find the item that contains the active path
+    const activeItem = MENU_DATA.find(
+      (item) => item.children && hasActiveChild(item.children, pathname),
+    );
+    // Only update if we found an active item and it's different (or null, though usually we want to keep one open)
+    if (activeItem) {
+      setOpenMenuKey(activeItem.title);
+    }
+  }, [pathname]);
+
+  const handleToggleMenu = (title: string) => {
+    // User requested: "Keep it open forever, even if I press it"
+    // So we just set the key to the title. We do NOT toggle it to null.
+    setOpenMenuKey(title);
+  };
 
   return (
     <>
@@ -255,24 +316,37 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         onClick={onClose}
       />
 
-      <aside className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
+      <aside
+        className={`${styles.sidebar} ${isOpen ? styles.open : ""} ${isCollapsed ? styles.collapsed : ""}`}
+      >
         <div className={styles.header}>
           <Link href="/" className={styles.logo}>
-            <div
-              style={{
-                width: 30,
-                height: 30,
-                background: "#252F4A",
-                borderRadius: "6px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <span style={{ color: "white", fontWeight: "bold" }}>M</span>
+            <div className={styles.logo_icon}>
+              <span>M</span>
             </div>
-            MetronicCloud
+            <span>MetronicCloud</span>
           </Link>
+
+          {/* Toggle Button in Header */}
+          <div
+            onClick={toggleCollapse}
+            className={`${styles.toggle_button} ${isCollapsed ? styles.collapsed_toggle : ""}`}
+            style={{ marginLeft: isCollapsed ? 0 : "auto" }} // Keep this minimal override if slightly complex, or move to class logic fully if possible.
+            // Note: The class logic 'collapsed_toggle' handles margin-left: 0, and default is auto. So we can try removing inline style.
+          >
+            {isCollapsed ? (
+              <ChevronRight size={20} />
+            ) : (
+              <div className={styles.toggle_icon_wrapper}>
+                <div className={styles.toggle_icon_box}>
+                  <ChevronRight
+                    size={16}
+                    style={{ transform: "rotate(180deg)" }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className={styles.scroll_area}>
@@ -283,76 +357,73 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           </div>
 
           <nav className={styles.navigation_root}>
-            {MENU_DATA.filter((item) => {
-              // 1. If user is not logged in, maybe show only basic public items (optional)
-              //    But currently sidebar is protected.
-              // 2. If item has generic access (no roles), show it.
-              if (!item.roles || item.roles.length === 0) return true;
+            {isLoading && !user ? (
+              // Navigation Skeleton - Only show if loading AND strictly no user data yet
+              <div className={styles.skeleton_nav}>
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className={styles.skeleton_item}>
+                    <div className={styles.skeleton_box} />
+                    {!isCollapsed && <div className={styles.skeleton_line} />}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              MENU_DATA.filter((item) => {
+                // 1. If user is not logged in, maybe show only basic public items (optional)
+                //    But currently sidebar is protected.
+                // 2. If item has generic access (no roles), show it.
+                if (!item.roles || item.roles.length === 0) return true;
 
-              // 3. User must have one of the required roles
-              if (user && item.roles.includes(user.role)) return true;
+                // 3. User must have one of the required roles
+                if (user && item.roles.includes(user.role)) return true;
 
-              return false;
-            }).map((item, index) => (
-              <SidebarItem key={index} item={item} />
-            ))}
+                return false;
+              }).map((item, index) => (
+                <SidebarItem
+                  key={item.title} // Use title as stable key instead of index
+                  item={item}
+                  // Control logic:
+                  // Pass isOpen only if we are controlling this item.
+                  // For top level items, we control them via openMenuKey.
+                  isOpen={
+                    item.children ? openMenuKey === item.title : undefined
+                  }
+                  onToggle={
+                    item.children
+                      ? () => handleToggleMenu(item.title)
+                      : undefined
+                  }
+                />
+              ))
+            )}
           </nav>
         </div>
 
         {/* Dynamic User Profile */}
         <div className={styles.user_profile}>
-          {isLoading ? (
+          {isLoading && !user ? (
             // Simple Skeleton Loader
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                gap: 12,
-                alignItems: "center",
-              }}
-            >
-              <div
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: "50%",
-                  background: "#F1F1F2",
-                }}
-              />
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 6,
-                  flex: 1,
-                }}
-              >
-                <div
-                  style={{
-                    width: "60%",
-                    height: 12,
-                    background: "#F1F1F2",
-                    borderRadius: 4,
-                  }}
-                />
-                <div
-                  style={{
-                    width: "40%",
-                    height: 10,
-                    background: "#F1F1F2",
-                    borderRadius: 4,
-                  }}
-                />
+            <div className={styles.skeleton_profile}>
+              <div className={styles.skeleton_avatar} />
+              <div className={styles.skeleton_text_col}>
+                <div className={styles.skeleton_text_lg} />
+                <div className={styles.skeleton_text_sm} />
               </div>
             </div>
           ) : user ? (
             <>
               <img src={user.avatar} alt="User" />
-              <div className={styles.user_info}>
+              <div
+                className={styles.user_info}
+                style={{ display: isCollapsed ? "none" : "flex" }}
+              >
                 <span className={styles.user_name}>{user.name}</span>
                 <span className={styles.user_role}>{user.role}</span>
               </div>
-              <div className={styles.actions}>
+              <div
+                className={styles.actions}
+                style={{ display: isCollapsed ? "none" : "flex" }}
+              >
                 <button
                   title={
                     theme === "light"
@@ -383,18 +454,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                     : "Switch to Light Mode"
                 }
                 onClick={toggleTheme}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  color: "var(--text-gray)",
-                  padding: "8px",
-                  borderRadius: "4px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  transition: "all 0.2s",
-                }}
+                className={styles.icon_button}
               >
                 {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
               </button>
