@@ -18,7 +18,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
   const { isLoading: isGlobalLoading } = useLoading();
-  const { isLoading: isAuthLoading } = useAuth(); // Initial auth check
+  const { isLoading: isAuthLoading, isLoggingOut } = useAuth(); // Initial auth check
 
   const isAuthPage = [
     "/auth/login",
@@ -29,8 +29,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   // 1. Full Screen Loading Logic
   // - Initial App Load (isAuthLoading)
   // - OR User is on an auth page and perform action (isGlobalLoading)
+  // - OR Logout is in progress (isLoggingOut)
   const showFullScreenLoading =
-    isAuthLoading || (isAuthPage && isGlobalLoading);
+    isAuthLoading || (isAuthPage && isGlobalLoading) || isLoggingOut;
 
   return (
     <div className={styles.layout_container}>

@@ -26,6 +26,8 @@ import {
   Moon,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { useLoading } from "@/context/LoadingContext";
+import { useScreenSize } from "@/hooks/useScreenSize";
 import { useTheme } from "@/context/ThemeContext";
 import styles from "./Sidebar.module.scss";
 
@@ -309,6 +311,16 @@ const Sidebar: React.FC<SidebarProps> = ({
     setOpenMenuKey(title);
   };
 
+  const { isMobile } = useScreenSize();
+
+  const handleToggleSidebar = () => {
+    if (isMobile) {
+      onClose(); // On mobile, close the menu completely
+    } else {
+      if (toggleCollapse) toggleCollapse(); // On desktop, toggle collapse state
+    }
+  };
+
   return (
     <>
       <div
@@ -329,7 +341,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
           {/* Toggle Button in Header */}
           <div
-            onClick={toggleCollapse}
+            onClick={handleToggleSidebar}
             className={`${styles.toggle_button} ${isCollapsed ? styles.collapsed_toggle : ""}`}
             style={{ marginLeft: isCollapsed ? 0 : "auto" }} // Keep this minimal override if slightly complex, or move to class logic fully if possible.
             // Note: The class logic 'collapsed_toggle' handles margin-left: 0, and default is auto. So we can try removing inline style.

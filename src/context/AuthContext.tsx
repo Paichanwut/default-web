@@ -15,9 +15,10 @@ interface User {
 interface AuthContextType {
   user: User | null;
   login: (email: string) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isLoggingOut: boolean;
 }
 
 // --- Context ---
@@ -33,6 +34,7 @@ import { encryptData, decryptData } from "@/utils/security";
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const router = useRouter();
 
   // Load user from local storage on mount (Simulation)
@@ -74,16 +76,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     router.push("/"); // Redirect to home after login
   };
 
-  const logout = () => {
+  const logout = async () => {
+    setIsLoggingOut(true);
+    // Simulate brief delay for better UX
+    await new Promise((resolve) => setTimeout(resolve, 800));
     setUser(null);
     localStorage.removeItem("app_user");
     Cookies.remove("auth_token", { path: "/" });
     router.push("/auth/login");
+    // We don't need to set isLoggingOut(false) because we redirect
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, isAuthenticated: !!user, isLoading }}
+      value={{
+        user,
+        login,
+        logout,
+        isAuthenticated: !!user,
+        isLoading,
+        isLoggingOut,
+      }}
     >
       {children}
     </AuthContext.Provider>

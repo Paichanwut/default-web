@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useContext, useState, useCallback } from "react";
-import Loading from "@/components/ui/Loading";
 
 interface LoadingContextType {
   isLoading: boolean;
