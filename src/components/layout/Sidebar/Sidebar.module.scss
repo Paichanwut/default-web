@@ -63,6 +63,16 @@
         .icon, .fallback_icon {
           margin: 0;
         }
+
+        // Remove active background in collapsed state, only show colored icon
+        &.active_item {
+          background-color: transparent;
+          color: $primary;
+
+          .icon {
+            color: $primary;
+          }
+        }
       }
       
       .user_profile {

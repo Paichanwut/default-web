@@ -306,9 +306,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   }, [pathname]);
 
   const handleToggleMenu = (title: string) => {
-    // User requested: "Keep it open forever, even if I press it"
-    // So we just set the key to the title. We do NOT toggle it to null.
-    setOpenMenuKey(title);
+    // Toggle logic: if already open, close it (set to null). Otherwise, open it.
+    setOpenMenuKey((prev) => (prev === title ? null : title));
   };
 
   const { isMobile } = useScreenSize();
