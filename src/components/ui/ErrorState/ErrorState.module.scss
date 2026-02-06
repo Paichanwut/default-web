@@ -1,0 +1,197 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.error_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: $bg-body; // Use theme variable
+  padding: 24px;
+  text-align: center;
+  color: $text-dark;
+  position: relative;
+  overflow: hidden;
+  margin-top: -50px; // Pull text slightly closer if needed, or rely on content gap
+}
+
+// Background Watermark
+.watermark {
+  position: absolute;
+  font-size: 25rem;
+  font-weight: 900;
+  color: rgba($text-gray, 0.03); // Very subtle
+  z-index: 0;
+  user-select: none;
+  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  position: relative;
+  z-index: 1;
+  animation: fadeIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  // Glassmorphism card effect (optional, keep subtle)
+  // background: rgba(255, 255, 255, 0.6);
+  // backdrop-filter: blur(10px);
+  // padding: 40px;
+  // border-radius: 24px;
+  // border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.code_wrapper {
+    position: relative;
+    
+    h1 {
+        font-size: 8rem;
+        font-weight: 800;
+        line-height: 1;
+        // Gradient text for premium look
+        // Use color-mix for browser-native lightening of CSS variable
+        background: linear-gradient(135deg, $primary 0%, color-mix(in srgb, var(--primary), white 40%) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        letter-spacing: -0.05em;
+        
+        @include mobile {
+            font-size: 5rem;
+        }
+    }
+}
+
+.message_box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-top: -100px; // Pull text slightly closer if needed, or rely on content gap
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: $text-dark;
+    margin-bottom: 4px;
+}
+
+.message {
+    font-size: 1rem;
+    color: $text-gray;
+    font-weight: 400;
+    max-width: 400px;
+    line-height: 1.6;
+}
+
+.actions {
+    margin-top: 24px; // Reduced from 32px
+    display: flex;
+    gap: 12px;
+}
+
+.home_button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 28px;
+    background-color: $primary;
+    color: white;
+    border-radius: 12px; // Softer corners
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba($primary, 0.25);
+    
+    &:hover {
+        /* Use filter for hover state since $primary is a CSS variable */
+        filter: brightness(1.1);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba($primary, 0.3);
+    }
+    
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+.secondary_button {
+    @extend .home_button;
+    background-color: $bg-sidebar; // Use theme variable
+    color: $text-dark;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid $border-color; // Use theme variable
+    
+    &:hover {
+       background-color: $bg-hover; // Use theme variable
+       filter: none; // Reset filter
+       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+       color: $primary;
+    }
+}
+
+.error_image {
+  max-width: 100%;
+  height: auto;
+  width: 500px;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.05));
+  animation: float 6s ease-in-out infinite;
+  
+  @include mobile {
+    width: 300px;
+  }
+}
+
+.image_wrapper {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 0; // Removed margin to reduce space
+  animation: float 6s ease-in-out infinite;
+  
+  // Override float on image itself since wrapper handles it
+  .error_image {
+    margin-bottom: 0;
+    animation: none; 
+    display: block; // Remove inline gap
+  }
+}
+
+.overlay_text {
+  position: absolute;
+  top: 33%; // Moved up further as requested
+  left: 46.5%; // Moved left as requested
+  transform: translate(-50%, -50%) rotate(-12deg); 
+  color: white;
+  font-size: 3.2rem;
+  font-weight: 900;
+  z-index: 2;
+  text-shadow: 1px 2px 4px rgba(0,0,0,0.25);
+  letter-spacing: 0.02em;
+  
+  @include mobile {
+    font-size: 2rem;
+  }
+}

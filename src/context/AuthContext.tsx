@@ -84,7 +84,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem("app_user");
     Cookies.remove("auth_token", { path: "/" });
     router.push("/auth/login");
-    // We don't need to set isLoggingOut(false) because we redirect
+    // Reset state after a short delay to ensure redirect happens while loader is up
+    setTimeout(() => {
+      setIsLoggingOut(false);
+    }, 500);
   };
 
   return (

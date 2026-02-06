@@ -1,0 +1,62 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.header_container {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  padding: 0px 0 20px 0;
+  
+  @include mobile {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: $text-dark;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  
+  li {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: $text-gray;
+    
+    &:not(:last-child)::after {
+      content: '/';
+      margin: 0 8px;
+      color: $text-light;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.crumb_link {
+  color: $text-gray;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: $primary;
+  }
+}
+
+.crumb_current {
+  color: $text-dark; // Or keep it gray but maybe slightly darker/lighter depending on theme
+  font-weight: 500;
+  cursor: default;
+}
