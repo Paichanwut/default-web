@@ -1,0 +1,257 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.table_wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 12px;
+  background-color: $bg-sidebar; // Card background
+  border: 1px dashed $border-color;
+  
+  // Custom scrollbar for webkit
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $border-color;
+    border-radius: 4px;
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  color: $text-dark;
+  
+  thead {
+    background-color: transparent;
+    border-bottom: 1px dashed $border-color;
+    
+    th {
+      padding: 12px 20px;
+      text-align: left;
+      font-weight: 600;
+      color: $text-gray;
+      font-size: 0.75rem; // Reduced from 0.85rem
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      
+      &.sortable {
+        cursor: pointer;
+        user-select: none;
+        transition: color 0.2s;
+        
+        &:hover {
+          color: $primary;
+        }
+      }
+
+      .header_content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      .header_text_with_info {
+        cursor: help;
+        border-bottom: 1px dotted $text-gray; 
+        transition: color 0.2s;
+        
+        &:hover {
+          color: $primary;
+          border-bottom-color: $primary;
+        }
+      }
+      
+      .info_indicator {
+        color: $primary;
+        opacity: 0.5;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px dashed $border-color;
+      transition: background-color 0.2s ease;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background-color: $bg-hover;
+      }
+    }
+
+    td {
+      padding: 16px 20px;
+      vertical-align: middle;
+      color: $text-light;
+      
+      // Preserve dark text for primary columns if needed, but default is text-light (usually grayish)
+    }
+  }
+}
+
+.empty_state {
+  padding: 40px;
+  text-align: center;
+  color: $text-gray;
+  font-size: 1rem;
+}
+
+// Modal Styles
+.modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4); // Slightly lighter for glass effect
+  z-index: 99999;
+  backdrop-filter: blur(5px); // Stronger blur
+  animation: fadeIn 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal_content {
+  background: white; // Ensure white background 
+  padding: 0; // Reset padding for internal structure
+  border-radius: 16px; // More rounded
+  width: 95%; // Slightly wider on mobile
+  max-width: 420px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); // Deep shadow
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden; // For header background
+  display: flex;
+  flex-direction: column;
+
+  // Header Area
+  .modal_header {
+    background: linear-gradient(to right, #f8fafc, #fff);
+    border-bottom: 1px solid #e2e8f0;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h3 {
+      margin: 0;
+      font-size: 1.15rem;
+      color: $text-dark;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      // Decorative Icon in title
+      svg.title_icon {
+        color: $primary;
+        opacity: 0.9;
+      }
+    }
+
+    .close_btn {
+      color: $text-gray;
+      background: transparent;
+      border: none;
+      padding: 6px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.05);
+        color: $text-dark;
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  // Content Area
+  .modal_body {
+    padding: 24px;
+    
+    p {
+      color: $text-gray;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+  }
+
+  // Footer Actions
+  .modal_actions {
+    padding: 10px 24px;
+    background: linear-gradient(to right, #f8fafc, #fff);
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    
+    button {
+      padding: 10px 20px;
+      border-radius: 10px;
+      background: $primary;
+      color: white;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s;
+      
+      &:hover {
+        background: $primary;
+        filter: brightness(0.9);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.2); // Removed $primary usage in rgba function too
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
+// Dark Mode Support (Implicit via variables)
+@media (prefers-color-scheme: dark) {
+  .modal_content {
+    background: #1e293b; 
+    border-color: #334155;
+
+    .modal_header {
+      background: linear-gradient(to right, #0f172a, #1e293b);
+      border-bottom-color: #334155;
+
+      h3 { color: #f1f5f9; }
+      .close_btn:hover { background: rgba(255, 255, 255, 0.1); color: white; }
+    }
+
+    .modal_body p { color: #94a3b8; }
+
+    .modal_actions {
+      background: linear-gradient(to right, #0f172a, #1e293b);
+      border-top-color: #334155;
+    }
+  }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px) scale(0.95); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}

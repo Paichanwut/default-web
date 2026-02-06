@@ -1,0 +1,132 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+.pagination_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-top: 1px dashed $border-color;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  @include mobile {
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+
+.pagination_info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: $text-gray;
+  font-size: 0.9rem;
+}
+
+.page_size_select {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid $border-color;
+  background-color: transparent;
+  color: $text-dark;
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none;
+  min-width: 60px;
+
+  &:focus {
+    border-color: $primary;
+  }
+}
+
+.pagination_controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.jump_to_page {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+  color: $text-gray;
+  font-size: 0.9rem;
+
+  input {
+    width: 50px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid $border-color;
+    background-color: transparent;
+    color: $text-dark;
+    text-align: center;
+    font-size: 0.9rem;
+    
+    &:focus {
+      border-color: $primary;
+      outline: none;
+    }
+    
+    /* Chrome, Safari, Edge, Opera */
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+}
+
+.page_item {
+  display: flex;
+}
+
+.page_link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 6px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background-color: transparent;
+  color: $text-gray;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+
+  &:hover:not(:disabled) {
+    background-color: $bg-hover;
+    color: $primary;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.active {
+  background-color: $primary;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(62, 151, 255, 0.2);
+
+  &:hover {
+    background-color: $primary;
+    color: #fff;
+  }
+}
+
+.dots {
+  color: $text-light;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 4px;
+}

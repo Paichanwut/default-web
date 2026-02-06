@@ -30,6 +30,12 @@ export const MENU_DATA: MenuItem[] = [
     type: "link",
   },
   {
+    title: "Components Demo",
+    icon: LayoutGrid,
+    type: "link",
+    children: [{ title: "Table & Pagination", path: "/table-demo" }],
+  },
+  {
     title: "Public Profile",
     icon: Users,
     // url removed to prevent 404 (Group header only)

@@ -89,7 +89,7 @@
     }
   }
 
-  @include mobile {
+  @include tablet {
     transform: translateX(-100%);
     width: 80%;
     max-width: 300px;
@@ -552,7 +552,7 @@
   background-color: rgba(0,0,0,0.3);
   z-index: 90;
 
-  @include mobile {
+  @include tablet {
     &.open {
       display: block;
     }
