@@ -59,7 +59,7 @@ const TableDemoPage = () => {
     {
       header: "ID",
       accessor: "id",
-      className: "w-[50px] font-bold text-gray-400",
+      className: "w-[50px] font-bold text-[var(--text-light)]",
       sortable: true,
       description: "Unique identifier for each user in the system.",
     },
@@ -75,10 +75,10 @@ const TableDemoPage = () => {
             <User size={16} />
           </div>
           <div className="flex flex-col">
-            <span className="font-semibold text-gray-800 dark:text-gray-200">
+            <span className="font-semibold text-[var(--text-dark)]">
               {row.name}
             </span>
-            <span className="text-xs text-gray-400">{row.email}</span>
+            <span className="text-xs text-[var(--text-gray)]">{row.email}</span>
           </div>
         </div>
       ),
@@ -130,7 +130,7 @@ const TableDemoPage = () => {
     {
       header: "Last Login",
       accessor: "lastLogin",
-      className: "text-gray-500",
+      className: "text-[var(--text-gray)]",
       sortable: true,
       description:
         "The date of the user's most recent successful login activity.",
@@ -156,17 +156,17 @@ const TableDemoPage = () => {
 
   return (
     <div className="p-6">
-      <div className="card bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+      <div className="card">
         <div className="mb-6 flex justify-between items-center">
           <div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+            <h3 className="text-title">
               User Management
             </h3>
-            <p className="text-sm text-gray-500">
+            <p className="text-muted">
               Example usage of integrated Table Pagination
             </p>
           </div>
-          <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors">
+          <button className="btn-primary">
             Add User
           </button>
         </div>

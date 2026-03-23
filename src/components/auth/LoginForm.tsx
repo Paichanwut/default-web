@@ -5,12 +5,26 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import styles from "@/app/auth/login/login.module.scss"; // Adjusted import path
 import { Eye, EyeOff } from "lucide-react";
+import { getObfuscatedVersion, getAppVersion } from "@/utils/version";
+import { VersionedLink } from "@/components/ui/VersionedLink";
 
-export default function LoginForm() {
+// Define props interface
+interface LoginFormProps {
+  appVersion?: string;
+}
+
+// Helper to generate obfuscated version
+// Helper to generate obfuscated version removed - moving to utils/version.ts
+
+export default function LoginForm({ appVersion = "0.0.0" }: LoginFormProps) {
   const { login } = useAuth();
   const [email, setEmail] = useState("admin@demo.com");
   const [password, setPassword] = useState("123456");
   const [showPassword, setShowPassword] = useState(false);
+
+  // Generate version string directly from util
+  const vString = getObfuscatedVersion();
+  const rawVersion = getAppVersion();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +39,7 @@ export default function LoginForm() {
         <h1 className={styles.title}>Sign in</h1>
         <p className={styles.subtitle}>
           Need an account?
-          <Link href="/auth/register">Sign up</Link>
+          <VersionedLink href="/auth/register">Sign up</VersionedLink>
         </p>
 
         <div className={styles.social_buttons}>
@@ -59,7 +73,7 @@ export default function LoginForm() {
           <div className={styles.form_group}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <label htmlFor="password">Password</label>
-              <Link
+              <VersionedLink
                 href="/auth/forgot-password"
                 className={styles.form_options + " " + styles.forgot}
                 style={{
@@ -70,7 +84,7 @@ export default function LoginForm() {
                 }}
               >
                 Forgot Password?
-              </Link>
+              </VersionedLink>
             </div>
 
             <div style={{ position: "relative" }}>
@@ -112,6 +126,10 @@ export default function LoginForm() {
             Sign In
           </button>
         </form>
+
+        <div className={styles.version}>
+          {vString ? `v${vString}` : `v${rawVersion}`}
+        </div>
       </div>
     </div>
   );

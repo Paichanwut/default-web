@@ -24,117 +24,66 @@ export default function Home() {
   return (
     <div>
       {/* Loading Demo Section */}
-      <section className="mb-8 p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
-        <h2 className="text-lg font-bold mb-4 text-gray-800">
+      <section className="card mb-8">
+        <h2 className="text-title mb-4">
           Loading Component Demo
         </h2>
         <div className="flex gap-4 items-center flex-wrap">
           <button
             onClick={handleSimulateLoading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="btn-primary"
           >
             Show Global Loading (2s)
           </button>
 
           <button
             onClick={handleAsyncOperation}
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            className="btn-primary !bg-purple-600 hover:!brightness-90 transition-colors"
           >
             Loading with Async Wrapper (3s)
           </button>
         </div>
 
         <div className="mt-4 flex gap-4 items-center">
-          <span className="text-sm text-gray-600">Inline Loading:</span>
+          <span className="text-muted">Inline Loading:</span>
           <Loading size="sm" />
           <Loading size="md" />
           <Loading size="lg" />
         </div>
       </section>
 
-      <header style={{ marginBottom: 32 }}>
-        <h1 style={{ fontSize: "1.75rem", fontWeight: 700, marginBottom: 8 }}>
+      <header className="mb-8">
+        <h1 className="text-2xl font-bold mb-2 text-[var(--text-dark)] transition-colors duration-300">
           Welcome back, {user ? user.name : "Guest"}
         </h1>
-        <p style={{ color: "var(--text-gray)" }}>
+        <p className="text-muted">
           Here is what's happening with your projects today.
         </p>
       </header>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-          gap: 24,
-        }}
-      >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Card 1 */}
-        <div
-          style={{
-            backgroundColor: "var(--bg-sidebar)",
-            padding: 24,
-            borderRadius: 12,
-            border: "1px solid var(--border-color)",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.02)",
-          }}
-        >
-          <h3
-            style={{
-              fontSize: "0.9rem",
-              fontWeight: 600,
-              color: "var(--text-gray)",
-              marginBottom: 8,
-            }}
-          >
+        <div className="card">
+          <h3 className="text-sm font-semibold text-muted mb-2 uppercase tracking-wider">
             TOTAL REVENUE
           </h3>
-          <div style={{ fontSize: "1.5rem", fontWeight: 700 }}>$14,200</div>
+          <div className="text-2xl font-bold text-[var(--text-dark)]">$14,200</div>
         </div>
 
         {/* Card 2 */}
-        <div
-          style={{
-            backgroundColor: "var(--bg-sidebar)",
-            padding: 24,
-            borderRadius: 12,
-            border: "1px solid var(--border-color)",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.02)",
-          }}
-        >
-          <h3
-            style={{
-              fontSize: "0.9rem",
-              fontWeight: 600,
-              color: "var(--text-gray)",
-              marginBottom: 8,
-            }}
-          >
+        <div className="card">
+          <h3 className="text-sm font-semibold text-muted mb-2 uppercase tracking-wider">
             ACTIVE PROJECTS
           </h3>
-          <div style={{ fontSize: "1.5rem", fontWeight: 700 }}>24</div>
+          <div className="text-2xl font-bold text-[var(--text-dark)]">24</div>
         </div>
 
         {/* Card 3 */}
-        <div
-          style={{
-            backgroundColor: "var(--bg-sidebar)",
-            padding: 24,
-            borderRadius: 12,
-            border: "1px solid var(--border-color)",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.02)",
-          }}
-        >
-          <h3
-            style={{
-              fontSize: "0.9rem",
-              fontWeight: 600,
-              color: "var(--text-gray)",
-              marginBottom: 8,
-            }}
-          >
+        <div className="card">
+          <h3 className="text-sm font-semibold text-muted mb-2 uppercase tracking-wider">
             NEW CLIENTS
           </h3>
-          <div style={{ fontSize: "1.5rem", fontWeight: 700 }}>+12</div>
+          <div className="text-2xl font-bold text-[var(--text-dark)]">+12</div>
         </div>
       </div>
     </div>

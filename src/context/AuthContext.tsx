@@ -4,13 +4,10 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 // --- Types ---
-interface User {
-  id: string;
-  name: string;
-  role: string;
-  email: string;
-  avatar: string;
-}
+// Re-using User type from authService to keep it consistent
+// interface User { ... }
+// We will alias the imported one for clarity or just use it directly.
+type User = ServiceUser;
 
 interface AuthContextType {
   user: User | null;
@@ -29,6 +26,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // @ts-ignore
 import Cookies from "js-cookie";
 import { encryptData, decryptData } from "@/utils/security";
+import { authService, User as ServiceUser } from "@/services/authService";
 
 // --- Provider ---
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -37,53 +35,35 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const router = useRouter();
 
-  // Load user from local storage on mount (Simulation)
+  // Load user from service on mount
   useEffect(() => {
-    const storedUser = localStorage.getItem("app_user");
+    const storedUser = authService.getUser();
     if (storedUser) {
-      // Decrypt data before using it
-      const decryptedUser = decryptData(storedUser);
-      if (decryptedUser) {
-        setUser(decryptedUser);
-      }
+      setUser(storedUser);
     }
     setIsLoading(false);
   }, []);
 
-  const login = (email: string) => {
-    // Simulate API call and dynamic data
-    // Extract name from email (e.g. admin@demo.com -> Admin)
-    const namePart = email.split("@")[0];
-    const displayName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
-
-    const mockUser: User = {
-      id: "1",
-      name: displayName,
-      role: "Admin", // Could correspond to specific emails if needed
-      email: email,
-      avatar: "https://i.pravatar.cc/150?img=11",
-    };
-
-    setUser(mockUser);
-
-    // Encrypt data before saving
-    const encryptedUser = encryptData(mockUser);
-    localStorage.setItem("app_user", encryptedUser);
-
-    // Set cookie for Middleware (expires in 1 day)
-    Cookies.set("auth_token", "valid_token", { expires: 1, path: "/" });
-
-    router.push("/"); // Redirect to home after login
+  const login = async (email: string) => {
+    try {
+      // Use the authService to "simulate" API login
+      const response = await authService.login(email);
+      setUser(response.user);
+      router.push("/"); // Redirect to home after login
+    } catch (error) {
+      console.error("Login failed", error);
+    }
   };
 
   const logout = async () => {
     setIsLoggingOut(true);
     // Simulate brief delay for better UX
     await new Promise((resolve) => setTimeout(resolve, 800));
+
+    authService.logout();
     setUser(null);
-    localStorage.removeItem("app_user");
-    Cookies.remove("auth_token", { path: "/" });
     router.push("/auth/login");
+
     // Reset state after a short delay to ensure redirect happens while loader is up
     setTimeout(() => {
       setIsLoggingOut(false);

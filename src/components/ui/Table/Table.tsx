@@ -146,14 +146,14 @@ const Table = <T extends object>({
               )}
             </tbody>
           </table>
-        </div>
 
-        {/* Integrated Pagination */}
-        {pagination && (
-          <div className={styles.table_footer}>
-            <Pagination {...pagination} />
-          </div>
-        )}
+          {/* Integrated Pagination */}
+          {pagination && (
+            <div className={styles.table_footer}>
+              <Pagination {...pagination} />
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Info Modal - Ported to body to ensure it's on top of everything */}

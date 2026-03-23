@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   /* Default Next.js Variables */
@@ -60,4 +61,30 @@ body {
   margin: 0;
   padding: 0;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@layer components {
+  /* Centralized Global Components */
+  .card {
+    @apply bg-[var(--bg-sidebar)] p-6 rounded-xl border border-[var(--border-color)] shadow-sm;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .text-title {
+    @apply text-lg font-bold text-[var(--text-dark)];
+    transition: color 0.3s ease;
+  }
+
+  .text-muted {
+    @apply text-sm text-[var(--text-gray)];
+    transition: color 0.3s ease;
+  }
+
+  .btn-primary {
+    @apply px-4 py-2 bg-[var(--primary)] text-white rounded-lg text-sm font-medium transition-all cursor-pointer;
+  }
+  
+  .btn-primary:hover {
+    filter: brightness(0.9);
+  }
 }

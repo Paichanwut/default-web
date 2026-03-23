@@ -7,9 +7,9 @@
   align-items: center;
   justify-content: center;
   background-color: $bg-body; // Light gray bg from design
-  
+
   // Optional: Add a subtle background pattern or gradient if needed
-  background-image: 
+  background-image:
     linear-gradient(to bottom right, $bg-body, $bg-hover);
 }
 
@@ -19,7 +19,7 @@
   background-color: $bg-sidebar;
   padding: 40px;
   border-radius: 12px;
-  box-shadow: 0 0 40px rgba(0,0,0,0.05);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -48,7 +48,7 @@
     text-decoration: none;
     font-weight: 600;
     margin-left: 4px;
-    
+
     &:hover {
       text-decoration: underline;
     }
@@ -99,7 +99,8 @@
   text-transform: uppercase;
   font-weight: 600;
 
-  &::before, &::after {
+  &::before,
+  &::after {
     content: '';
     flex: 1;
     height: 1px;
@@ -113,7 +114,7 @@
 
 .form {
   width: 100%;
-  
+
   .form_group {
     margin-bottom: 16px;
 
@@ -199,4 +200,14 @@
       transform: translateY(1px);
     }
   }
+
+}
+
+.version {
+  margin-top: 40px; // More space from button
+  color: #A1A5B7; // Specific gray color (Metronic Gray)
+  font-size: 0.75rem; // Smaller font
+  text-align: center;
+  width: 100%;
+  font-weight: 500;
 }

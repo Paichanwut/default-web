@@ -5,12 +5,12 @@ import React from "react";
 const BloggerPage = () => {
   return (
     <div className="p-6">
-      <div className="card mt-5 p-10 bg-white dark:bg-gray-900 rounded-xl border border-dashed border-gray-300 dark:border-gray-700">
+      <div className="card mt-5 p-10 border-dashed">
         <div className="text-center">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+          <h3 className="text-title mb-2">
             Blogger Content
           </h3>
-          <p className="text-gray-500">
+          <p className="text-muted">
             This is where the blogger profile content would go.
           </p>
         </div>
